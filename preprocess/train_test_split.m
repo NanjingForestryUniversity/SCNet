@@ -1,0 +1,15 @@
+data=[x,y];
+test_rate = 0.3;
+data_num = size(x, 1);
+train_num = round((1-test_rate) * data_num);
+idx=randperm(data_num);
+train_idx=idx(1:train_num);
+test_idx=idx(train_num+1:data_num);
+data_train=data(train_idx,:);
+x_train=data_train(:,1:size(x, 2));
+y_train=data_train(:,size(x, 2)+1);
+test_data=data(test_idx,:);
+x_test=test_data(:,1:size(x, 2));
+y_test=test_data(:,size(x, 2)+1);
+clear data_num train_num idx train_idx test_idx test_data train_data x y;
+clear data data_train test_rate;
