@@ -8,6 +8,9 @@ The other three dataset (corn, marzipan, soil) were preprocessed manually with M
 The mango dataset is not in Matlab .m file format, so we save them with the `process.py`. 
 Meanwhile, we drop the useless part and only save the data between  684 and 900 nm.
 
+All these datasets are available at this [link](https://drive.google.com/drive/folders/1RFREskNcI2sDv6p7lvLhxFRLUgVTwho6?usp=sharing)
+
+
 > The data set used in this study comprises a total of 11,691 NIR spectra (684–990 nm in 3 nm sampling with a total 103 variables) and DM measurements performed on 4675 mango fruit across 4 harvest seasons 2015, 2016, 2017 and 2018 [24]. 
 
 The detailed preprocessing progress can be found in [./preprocess.ipynb](./preprocess.ipynb)
