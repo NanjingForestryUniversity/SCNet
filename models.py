@@ -2,7 +2,8 @@ from tkinter import N
 import keras.callbacks
 import keras.layers as KL
 from keras import Model
-from keras.optimizers import adam_v2
+from keras.optimizers import adam_v2, nadam_v2, adagrad_v2
+from tensorflow.keras.optimizers import SGD, RMSprop
 
 
 class Plain5(object):
@@ -33,9 +34,22 @@ class Plain5(object):
         model = Model(input_layer, x)
         return model
 
-    def fit(self, x, y, x_val, y_val, epoch, batch_size):
-        self.model.compile(loss='mse', optimizer=adam_v2.Adam(learning_rate=0.01 * (batch_size / 256)))
-        checkpoint = keras.callbacks.ModelCheckpoint(filepath='checkpoints/plain5.hdf5', monitor='val_loss',
+    def fit(self, x, y, x_val, y_val, epoch, batch_size, method='adam'):
+        save = f'checkpoints/plain5_{method}.hdf5'
+        if method == "adam":
+            optimizer = adam_v2.Adam(learning_rate=0.01 * (batch_size / 256))
+        elif method == 'nadam':
+            optimizer = nadam_v2.Nadam(learning_rate=0.01 * (batch_size / 256))
+        elif method == 'adagrad':
+            optimizer = adagrad_v2.Adagrad(learning_rate=0.01 * (batch_size / 256))
+        elif method == 'sgd':
+            optimizer = SGD(learning_rate=0.01 * (batch_size / 256))
+        elif method == 'rmsprop':
+            optimizer = RMSprop(learning_rate=0.01 * (batch_size / 256))
+        else:
+            optimizer = adam_v2.Adam(learning_rate=0.01 * (batch_size / 256))
+        self.model.compile(loss='mse', optimizer=optimizer)
+        checkpoint = keras.callbacks.ModelCheckpoint(filepath=save, monitor='val_loss',
                                                      mode="min", save_best_only=True)
         early_stop = keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=0,
                                                    patience=1000, verbose=0, mode='auto')
@@ -77,12 +91,25 @@ class Residual5(object):
         model = Model(input_layer, x)
         return model
 
-    def fit(self, x, y, x_val, y_val, epoch, batch_size):
-        self.model.compile(loss='mse', optimizer=adam_v2.Adam(learning_rate=0.01 * (batch_size / 256)))
-        checkpoint = keras.callbacks.ModelCheckpoint(filepath='checkpoints/res5.hdf5', monitor='val_loss',
+    def fit(self, x, y, x_val, y_val, epoch, batch_size, method='adam'):
+        save = f'checkpoints/res5_{method}.hdf5'
+        if method == "adam":
+            optimizer = adam_v2.Adam(learning_rate=0.01 * (batch_size / 256))
+        elif method == 'nadam':
+            optimizer = nadam_v2.Nadam(learning_rate=0.01 * (batch_size / 256))
+        elif method == 'adagrad':
+            optimizer = adagrad_v2.Adagrad(learning_rate=0.01 * (batch_size / 256))
+        elif method == 'sgd':
+            optimizer = SGD(learning_rate=0.01 * (batch_size / 256))
+        elif method == 'rmsprop':
+            optimizer = RMSprop(learning_rate=0.01 * (batch_size / 256))
+        else:
+            optimizer = adam_v2.Adam(learning_rate=0.01 * (batch_size / 256))
+        self.model.compile(loss='mse', optimizer=optimizer)
+        checkpoint = keras.callbacks.ModelCheckpoint(filepath=save, monitor='val_loss',
                                                      mode="min", save_best_only=True)
-        early_stop = keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=0,
-                                                   patience=1000, verbose=0, mode='auto')
+        early_stop = keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=0, patience=1000,
+                                                   verbose=0, mode='auto')
         lr_decay = keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=25, min_delta=1e-6)
         callbacks = [checkpoint, early_stop, lr_decay]
         history = self.model.fit(x, y, validation_data=(x_val, y_val), epochs=epoch, verbose=1,
@@ -120,10 +147,22 @@ class ShortCut5(object):
         model = Model(input_layer, x)
         return model
 
-    def fit(self, x, y, x_val, y_val, epoch, batch_size):
-        self.model.compile(loss='mse', optimizer=adam_v2.Adam(learning_rate=0.01 * (batch_size / 256)))
-
-        checkpoint = keras.callbacks.ModelCheckpoint(filepath='checkpoints/shortcut5.hdf5', monitor='val_loss',
+    def fit(self, x, y, x_val, y_val, epoch, batch_size, method='adam'):
+        save = f'checkpoints/shortcut5_{method}.hdf5'
+        if method == "adam":
+            optimizer = adam_v2.Adam(learning_rate=0.01 * (batch_size / 256))
+        elif method == 'nadam':
+            optimizer = nadam_v2.Nadam(learning_rate=0.01 * (batch_size / 256))
+        elif method == 'adagrad':
+            optimizer = adagrad_v2.Adagrad(learning_rate=0.01 * (batch_size / 256))
+        elif method == 'sgd':
+            optimizer = SGD(learning_rate=0.01 * (batch_size / 256))
+        elif method == 'rmsprop':
+            optimizer = RMSprop(learning_rate=0.01 * (batch_size / 256))
+        else:
+            optimizer = adam_v2.Adam(learning_rate=0.01 * (batch_size / 256))
+        self.model.compile(loss='mse', optimizer=optimizer)
+        checkpoint = keras.callbacks.ModelCheckpoint(filepath=save, monitor='val_loss',
                                                      mode="min", save_best_only=True)
         early_stop = keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=0,
                                                    patience=1000, verbose=0, mode='auto')
@@ -183,8 +222,22 @@ class ShortCut11(object):
         model = Model(input_layer, x)
         return model
 
-    def fit(self, x, y, x_val, y_val, epoch, batch_size, save='checkpoints/shortcut11.hdf5', is_show=True):
-        self.model.compile(loss='mse', optimizer=adam_v2.Adam(learning_rate=0.01 * (batch_size / 256)))
+    def fit(self, x, y, x_val, y_val, epoch, batch_size, is_show=True,
+            method='adam'):
+        save = f'checkpoints/shortcut11_{method}.hdf5'
+        if method == "adam":
+            optimizer = adam_v2.Adam(learning_rate=0.01 * (batch_size / 256))
+        elif method == 'nadam':
+            optimizer = nadam_v2.Nadam(learning_rate=0.01 * (batch_size / 256))
+        elif method == 'adagrad':
+            optimizer = adagrad_v2.Adagrad(learning_rate=0.01 * (batch_size / 256))
+        elif method == 'sgd':
+            optimizer = SGD(learning_rate=0.01 * (batch_size / 256))
+        elif method == 'rmsprop':
+            optimizer = RMSprop(learning_rate=0.01 * (batch_size / 256))
+        else:
+            optimizer = adam_v2.Adam(learning_rate=0.01 * (batch_size / 256))
+        self.model.compile(loss='mse', optimizer=optimizer)
         callbacks = []
         checkpoint = keras.callbacks.ModelCheckpoint(filepath=save, monitor='val_loss',
                                                  mode="min", save_best_only=True)
@@ -248,9 +301,23 @@ class Plain11(object):
         model = Model(input_layer, x)
         return model
 
-    def fit(self, x, y, x_val, y_val, epoch, batch_size):
-        self.model.compile(loss='mse', optimizer=adam_v2.Adam(learning_rate=0.01 * (batch_size / 256)))
-        checkpoint = keras.callbacks.ModelCheckpoint(filepath='checkpoints/plain11.hdf5', monitor='val_loss',
+    def fit(self, x, y, x_val, y_val, epoch, batch_size, method='adam'):
+        save = f'checkpoints/plain11_{method}.hdf5'
+        if method == "adam":
+            optimizer = adam_v2.Adam(learning_rate=0.01 * (batch_size / 256))
+        elif method == 'nadam':
+            optimizer = nadam_v2.Nadam(learning_rate=0.01 * (batch_size / 256))
+        elif method == 'adagrad':
+            optimizer = adagrad_v2.Adagrad(learning_rate=0.01 * (batch_size / 256))
+        elif method == 'sgd':
+            optimizer = SGD(learning_rate=0.01 * (batch_size / 256))
+        elif method == 'rmsprop':
+            optimizer = RMSprop(learning_rate=0.01 * (batch_size / 256))
+        else:
+            optimizer = adam_v2.Adam(learning_rate=0.01 * (batch_size / 256))
+        self.model.compile(loss='mse', optimizer=optimizer)
+
+        checkpoint = keras.callbacks.ModelCheckpoint(filepath=save, monitor='val_loss',
                                                      mode="min", save_best_only=True)
         early_stop = keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=1e-6,
                                                    patience=200, verbose=0, mode='auto')
@@ -294,9 +361,21 @@ class SimpleCNN(object):
         model = Model(input_layer, x)
         return model
 
-    def fit(self, x, y, x_val, y_val, epoch, batch_size):
-        self.model.compile(loss='mse', optimizer=adam_v2.Adam(learning_rate=0.01 * (batch_size / 256)))
-        checkpoint = keras.callbacks.ModelCheckpoint(filepath='checkpoints/plain5.hdf5', monitor='val_loss',
+    def fit(self, x, y, x_val, y_val, epoch, batch_size, method='adam'):
+        if method == "adam":
+            optimizer = adam_v2.Adam(learning_rate=0.01 * (batch_size / 256))
+        elif method == 'nadam':
+            optimizer = nadam_v2.Nadam(learning_rate=0.01 * (batch_size / 256))
+        elif method == 'adagrad':
+            optimizer = adagrad_v2.Adagrad(learning_rate=0.01 * (batch_size / 256))
+        elif method == 'sgd':
+            optimizer = SGD(learning_rate=0.01 * (batch_size / 256))
+        elif method == 'rmsprop':
+            optimizer = RMSprop(learning_rate=0.01 * (batch_size / 256))
+        else:
+            optimizer = adam_v2.Adam(learning_rate=0.01 * (batch_size / 256))
+        self.model.compile(loss='mse', optimizer=optimizer)
+        checkpoint = keras.callbacks.ModelCheckpoint(filepath='checkpoints/simplecnn.hdf5', monitor='val_loss',
                                                      mode="min", save_best_only=True)
         early_stop = keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=0,
                                                    patience=1000, verbose=0, mode='auto')
@@ -306,6 +385,48 @@ class SimpleCNN(object):
                                  callbacks=callbacks, batch_size=batch_size)
         return history
 
+
+class DNN(object):
+    def __init__(self, model_path=None, input_shape=None):
+        self.model = None
+        self.input_shape = input_shape
+        if model_path is not None:
+            pass
+        else:
+            self.model = self.build_model()
+
+    def build_model(self):
+        input_layer = KL.Input(self.input_shape, name='input')
+        x = KL.Dense(200, activation='relu', name="dense0")(input_layer)
+        x = KL.Dense(100, activation='relu', name='dense1')(x)
+        x = KL.Dense(1, activation='sigmoid', name='output')(x)
+        model = Model(input_layer, x)
+        return model
+
+    def fit(self, x, y, x_val, y_val, epoch, batch_size, method='adam'):
+        if method == "adam":
+            optimizer = adam_v2.Adam(learning_rate=0.01 * (batch_size / 256))
+        elif method == 'nadam':
+            optimizer = nadam_v2.Nadam(learning_rate=0.01 * (batch_size / 256))
+        elif method == 'adagrad':
+            optimizer = adagrad_v2.Adagrad(learning_rate=0.01 * (batch_size / 256))
+        elif method == 'sgd':
+            optimizer = SGD(learning_rate=0.01 * (batch_size / 256))
+        elif method == 'rmsprop':
+            optimizer = RMSprop(learning_rate=0.01 * (batch_size / 256))
+        else:
+            optimizer = adam_v2.Adam(learning_rate=0.01 * (batch_size / 256))
+        self.model.compile(loss='mse', optimizer=optimizer)
+        checkpoint = keras.callbacks.ModelCheckpoint(filepath='checkpoints/dnn.hdf5', monitor='val_loss',
+                                                     mode="min", save_best_only=True)
+        early_stop = keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=1e-6,
+                                                   patience=200, verbose=0, mode='auto')
+        lr_decay = keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.5,
+                                                     patience=25, min_delta=1e-6)
+        callbacks = [checkpoint, early_stop, lr_decay]
+        history = self.model.fit(x, y, validation_data=(x_val, y_val), epochs=epoch, verbose=1,
+                                 callbacks=callbacks, batch_size=batch_size)
+        return history
 
 
 if __name__ == '__main__':
