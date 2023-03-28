@@ -182,7 +182,7 @@ class ShortCut11(object):
         model = Model(input_layer, x)
         return model
 
-    def fit(self, x, y, x_val, y_val, epoch, batch_size, save='checkpoints/shortcut11.hdf5'):
+    def fit(self, x, y, x_val, y_val, epoch, batch_size, save='checkpoints/shortcut11.hdf5', is_show=True):
         self.model.compile(loss='mse', optimizer=adam_v2.Adam(learning_rate=0.01 * (batch_size / 256)))
         callbacks = []
         checkpoint = keras.callbacks.ModelCheckpoint(filepath=save, monitor='val_loss',
@@ -194,8 +194,8 @@ class ShortCut11(object):
                                                      patience=25, min_delta=1e-6)
         callbacks.append(early_stop)
         callbacks.append(lr_decay)
-
-        history = self.model.fit(x, y, validation_data=(x_val, y_val), epochs=epoch, verbose=1,
+        verbose_num = 1 if is_show else 0
+        history = self.model.fit(x, y, validation_data=(x_val, y_val), epochs=epoch, verbose=verbose_num,
                                  callbacks=callbacks, batch_size=batch_size)
         return history
 
